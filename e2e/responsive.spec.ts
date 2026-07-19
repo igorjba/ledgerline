@@ -37,6 +37,18 @@ test.describe("responsiveness", () => {
   }
 });
 
+test.describe("light theme", () => {
+  test("has no accessibility violations in light mode", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
+    await expect(page.getByTestId("console")).toBeVisible();
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+});
+
 test.describe("keyboard accessibility", () => {
   test("interactive controls are reachable and focusable by keyboard", async ({ page }) => {
     await page.goto("/");

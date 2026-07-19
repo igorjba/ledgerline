@@ -32,13 +32,20 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#08090c",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
+
+// Applies the saved theme before first paint so there is no flash. Dark is the
+// default; only a stored "light" preference flips it. Inline on purpose — it must
+// run before the body renders.
+const THEME_INIT = `try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body className="min-h-screen antialiased">{children}</body>
     </html>
   );

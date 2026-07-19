@@ -53,6 +53,18 @@ test.describe("billing console", () => {
     await expect(page.getByRole("tooltip")).toBeVisible();
   });
 
+  test("theme toggle switches to light and persists, dark by default", async ({ page }) => {
+    const html = page.locator("html");
+    await expect(html).not.toHaveAttribute("data-theme", "light"); // dark is default
+    const toggle = page.getByRole("button", { name: "Alternar entre modo claro e escuro" });
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await page.reload();
+    await expect(html).toHaveAttribute("data-theme", "light"); // persisted, no flash
+    await toggle.click();
+    await expect(html).not.toHaveAttribute("data-theme", "light");
+  });
+
   test("has no accessibility violations", async ({ page }) => {
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);

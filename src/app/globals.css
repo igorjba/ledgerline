@@ -44,6 +44,63 @@
   color-scheme: dark;
 }
 
+/*
+ * Light theme. Dark is the default (the tokens above); this block only takes
+ * over when the toggle sets data-theme="light" on <html>. Accent/status colours
+ * are darkened so they clear WCAG AA on the light panels.
+ */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-void: #eef1f5;
+  --color-abyss: #e7ebf1;
+  --color-panel: #ffffff;
+  --color-panel-2: #f1f4f8;
+  --color-edge: #dde3ec;
+  --color-edge-bright: #c3ccd9;
+
+  --color-ink: #16202e;
+  --color-ink-dim: #45566a;
+  --color-ink-faint: #5c6b7e;
+
+  --color-amber: #b45309;
+  --color-amber-dim: #92400e;
+  --color-flux: #2563eb;
+
+  --color-credit: #047857;
+  --color-debit: #b91c1c;
+  --color-warn: #b45309;
+  --color-good: #047857;
+
+  --color-flag-green: #059669;
+  --color-flag-yellow: #ca8a04;
+  --color-flag-red1: #ea580c;
+  --color-flag-red2: #dc2626;
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(1100px 560px at 88% -12%, rgba(180, 83, 9, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 2% 108%, rgba(37, 99, 235, 0.05), transparent 55%),
+    var(--color-void);
+}
+
+:root[data-theme="light"] .ledger-grid {
+  background-image: linear-gradient(rgba(30, 41, 59, 0.06) 1px, transparent 1px);
+}
+
+/* Theme toggle: show the icon for the action available, driven by data-theme so
+   there is no hydration flash and no dependency on JS for the visual state. */
+.theme-icon-moon {
+  display: none;
+}
+:root[data-theme="light"] .theme-icon-sun {
+  display: none;
+}
+:root[data-theme="light"] .theme-icon-moon {
+  display: inline-flex;
+}
+
 /* One consistent keyboard focus ring for every interactive element. Only shows
    for keyboard users (:focus-visible), never on a mouse click. */
 :focus-visible {

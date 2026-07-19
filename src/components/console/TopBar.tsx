@@ -6,6 +6,7 @@ import { cycleKey } from "@/lib/domain";
 import { formatDateTime } from "@/lib/utils";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { ThemeToggle } from "../ui/ThemeToggle";
 
 export function TopBar() {
   const clock = useBillingStore((s) => s.clock);
@@ -32,6 +33,7 @@ export function TopBar() {
         <span className="font-mono tabular text-ink-faint" title="Horário atual do sistema na simulação">
           agora {formatDateTime(clock)}
         </span>
+        <ThemeToggle />
         <Button
           variant="ghost"
           icon={<RotateCcw size={13} />}
