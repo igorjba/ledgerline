@@ -6,6 +6,10 @@ test.describe("billing console", () => {
     await page.goto("/");
   });
 
+  test("declares a favicon for the browser tab", async ({ page }) => {
+    await expect(page.locator('link[rel~="icon"]').first()).toHaveAttribute("href", /icon\.svg/);
+  });
+
   test("renders the seeded scenario with a balanced ledger", async ({ page }) => {
     const console = page.getByTestId("console");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/cobra pela leitura/i);
