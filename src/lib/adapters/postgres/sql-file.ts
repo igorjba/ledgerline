@@ -3,10 +3,10 @@
  * statement per prepared query, so a migration with several DDL commands (and a
  * dollar-quoted function body) has to be executed piece by piece.
  *
- * The scanner tracks the three contexts where a `;` is not a statement boundary:
- * line comments (`-- …`, dropped), single-quoted string literals (`'…'`, with
- * `''` as an escaped quote), and dollar-quoted blocks (`$$…$$`, `$tag$…$tag$`,
- * copied verbatim including any comments inside them).
+ * The scanner tracks the contexts where a `;` is not a statement boundary: line
+ * comments and slash-star block comments, both dropped; single-quoted string
+ * literals (`'…'`, with `''` as an escaped quote); and dollar-quoted blocks
+ * (`$$…$$`, `$tag$…$tag$`, copied verbatim including any comments inside them).
  */
 export function splitStatements(sql: string): string[] {
   const statements: string[] = [];
@@ -48,6 +48,12 @@ export function splitStatements(sql: string): string[] {
     if (rest.startsWith("--")) {
       const newline = sql.indexOf("\n", i);
       i = newline === -1 ? sql.length : newline;
+      continue;
+    }
+
+    if (rest.startsWith("/*")) {
+      const end = sql.indexOf("*/", i + 2);
+      i = end === -1 ? sql.length : end + 2;
       continue;
     }
 

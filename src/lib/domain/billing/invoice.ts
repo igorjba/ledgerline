@@ -12,7 +12,8 @@
 
 import { add, applyRate, type Money, ZERO } from "../money";
 import { priceReading, TARIFF_PERIODS, type FlagColor, type FlagRates, type TariffPeriod, type TariffRuleset } from "../tariff";
-import type { BillingCycle, MeterId, Reading } from "../types";
+import { contains } from "../time";
+import { cycleRange, type BillingCycle, type MeterId, type Reading } from "../types";
 
 export interface InvoiceLine {
   readonly period: TariffPeriod;
@@ -44,9 +45,14 @@ export interface InvoiceInput {
 }
 
 export function computeInvoice(input: InvoiceInput): ComputedInvoice {
-  const priced = input.readings.map((r) =>
-    priceReading(r, input.tariff, input.flagColor, input.flagRates),
-  );
+  // A reading belongs to the cycle that contains its start instant, so a reading
+  // straddling a month boundary is billed in exactly one cycle — never twice.
+  // Enforced here, at the single pricing point, so every caller (the engine and
+  // the invoices API alike) is protected, not only those that pre-filter.
+  const window = cycleRange(input.cycle);
+  const priced = input.readings
+    .filter((r) => contains(window, r.periodStart))
+    .map((r) => priceReading(r, input.tariff, input.flagColor, input.flagRates));
 
   const byPeriod = new Map<TariffPeriod, { kwh: number; energyCents: Money; rate: number }>();
   for (const line of priced) {

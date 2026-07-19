@@ -12,6 +12,18 @@ describe("splitStatements", () => {
     expect(splitStatements("SELECT 1; SELECT 2;")).toEqual(["SELECT 1", "SELECT 2"]);
   });
 
+  it("drops line and block comments, keeping semicolons inside them out of the split", () => {
+    expect(splitStatements("SELECT 1; -- a; b\nSELECT 2;")).toEqual(["SELECT 1", "SELECT 2"]);
+    expect(splitStatements("SELECT 1 /* drop; me */; SELECT 2")).toEqual(["SELECT 1", "SELECT 2"]);
+  });
+
+  it("keeps a semicolon inside a string literal out of the split", () => {
+    expect(splitStatements("INSERT INTO t VALUES ('a;b'); SELECT 1")).toEqual([
+      "INSERT INTO t VALUES ('a;b')",
+      "SELECT 1",
+    ]);
+  });
+
   it("keeps a dollar-quoted function body as a single statement", () => {
     const fn = splitStatements(migration).find((s) => s.includes("CREATE OR REPLACE FUNCTION"));
     expect(fn).toBeDefined();

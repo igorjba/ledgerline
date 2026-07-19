@@ -22,7 +22,7 @@ export default defineConfig({
       // The pure, load-bearing core. Adapters and API routes are integration
       // territory (Postgres tests / Playwright), so they stay out of scope here.
       include: ["src/lib/domain/**/*.ts", "src/lib/outbox/relay.ts"],
-      exclude: ["src/lib/**/*.test.ts", "src/lib/**/index.ts", "src/lib/domain/scenario.ts"],
+      exclude: ["src/lib/**/*.test.ts", "src/lib/**/*.bench.ts", "src/lib/**/index.ts"],
       thresholds: {
         lines: 90,
         functions: 90,
