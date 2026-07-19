@@ -18,6 +18,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
+    "bench": "vitest bench --run",
     "pgtest": "vitest run --config vitest.pg.config.ts",
     "db:migrate": "node --experimental-strip-types scripts/migrate.ts",
     "e2e": "playwright test",
